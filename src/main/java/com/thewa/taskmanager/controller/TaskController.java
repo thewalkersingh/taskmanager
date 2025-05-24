@@ -23,7 +23,7 @@ public class TaskController {
   public TaskController(TaskService service) {
 	this.service = service;
   }
-  
+  @Operation(summary = "Get all existing task list based on any options")
   @GetMapping
   public List<TaskResponseDTO> getTasks(
 		  @RequestParam(required = false) Status status,
@@ -46,7 +46,7 @@ public class TaskController {
 	  default -> Comparator.comparing(Task::getId);
 	};
   }
-  
+  @Operation(summary = "Get task based on id")
   @GetMapping("/{id}")
   public TaskResponseDTO getTaskById(@PathVariable Long id) {
 	return TaskMapper.toResponse(service.getTaskById(id));
@@ -58,13 +58,13 @@ public class TaskController {
 	Task created = service.createTask(TaskMapper.fromRequest(dto));
 	return TaskMapper.toResponse(created);
   }
-  
+  @Operation(summary = "Update the existing task")
   @PutMapping("/{id}")
   public TaskResponseDTO updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDTO dto) {
 	Task updated = service.updateTask(id, TaskMapper.fromRequest(dto));
 	return TaskMapper.toResponse(updated);
   }
-  
+  @Operation(summary = "Delete the existing task by Id")
   @DeleteMapping("/{id}")
   public void deleteTask(@PathVariable Long id) {
 	service.deleteTask(id);

@@ -35,6 +35,12 @@ public class DummyTaskData implements CommandLineRunner {
 	taskService.createTask(new Task(null, "Fix Bugs", "Debug the feature branch",
 			LocalDate.now().plusDays(4), Priority.MEDIUM,
 			Status.IN_PROGRESS));
+	taskService.createTask(new Task(null, "Create Task Project", "I have to create REST API project",
+			LocalDate.now().plusDays(7), Priority.HIGH,
+			Status.IN_PROGRESS));
+	taskService.createTask(new Task(null, "Update ReviveHub", "Update the ReviveHub API",
+			LocalDate.now().plusDays(4), Priority.LOW,
+			Status.COMPLETED));
 	
 	System.out.println("Dummy task data loaded successfully.");
   }
