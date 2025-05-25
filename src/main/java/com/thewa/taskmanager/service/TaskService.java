@@ -5,6 +5,7 @@ import com.thewa.taskmanager.model.Task;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskService {
   Task createTask(Task task);
@@ -13,9 +14,7 @@ public interface TaskService {
   
   void deleteTask(Long id);
   
-  List<Task> getAllTasks(Status status, Priority priority, LocalDate from, LocalDate to);
+  List<Task> getAllTasks(Status status, Priority priority, LocalDate from, LocalDate to, String sortBy);
   
-  Task getTaskById(Long id);
-  
-  List<Task> getFilteredTasks(Status status, Priority priority, String sortBy);
+  Optional<Task> getTaskById(Long id);
 }

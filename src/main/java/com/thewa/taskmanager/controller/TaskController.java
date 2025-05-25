@@ -1,17 +1,18 @@
 package com.thewa.taskmanager.controller;
 import com.thewa.taskmanager.dto.TaskRequestDTO;
 import com.thewa.taskmanager.dto.TaskResponseDTO;
+import com.thewa.taskmanager.exception.TaskValidationException;
 import com.thewa.taskmanager.mapper.TaskMapper;
 import com.thewa.taskmanager.model.Priority;
 import com.thewa.taskmanager.model.Status;
 import com.thewa.taskmanager.model.Task;
 import com.thewa.taskmanager.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ public class TaskController {
   public TaskController(TaskService service) {
 	this.service = service;
   }
+  
   @Operation(summary = "Get all existing task list based on any options")
   @GetMapping
   public List<TaskResponseDTO> getTasks(
@@ -31,51 +33,42 @@ public class TaskController {
 		  @RequestParam(required = false) LocalDate from,
 		  @RequestParam(required = false) LocalDate to,
 		  @RequestParam(required = false, defaultValue = "id") String sortBy) {
-	return service.getAllTasks(status, priority, from, to)
+	
+	return service.getAllTasks(status, priority, from, to, sortBy)
 				  .stream()
-				  .sorted(getComparator(sortBy))
 				  .map(TaskMapper::toResponse)
 				  .collect(Collectors.toList());
   }
   
-  private Comparator<Task> getComparator(String sortBy) {
-	return switch(sortBy.toLowerCase()){
-	  case "status" -> Comparator.comparing(Task::getStatus);
-	  case "priority" -> Comparator.comparing(Task::getPriority);
-	  case "duedate" -> Comparator.comparing(Task::getDueDate, Comparator.nullsLast(Comparator.naturalOrder()));
-	  default -> Comparator.comparing(Task::getId);
-	};
-  }
-  @Operation(summary = "Get task based on id")
+  @Operation(summary = "Get the task based on id")
   @GetMapping("/{id}")
-  public TaskResponseDTO getTaskById(@PathVariable Long id) {
-	return TaskMapper.toResponse(service.getTaskById(id));
+  public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable Long id) {
+	return service.getTaskById(id)
+				  .map(task -> ResponseEntity.ok(TaskMapper.toResponse(task)))
+				  .orElseGet(() -> ResponseEntity.notFound().build());
   }
   
-  @Operation(summary = "Create a new task", description = "Provide title, priority and optional fields")
+  @Operation(summary = "Create a new task")
   @PostMapping
-  public TaskResponseDTO createTask(@Valid @RequestBody TaskRequestDTO dto) {
+  public ResponseEntity<TaskResponseDTO> createTask(@Valid @RequestBody TaskRequestDTO dto) {
 	Task created = service.createTask(TaskMapper.fromRequest(dto));
-	return TaskMapper.toResponse(created);
+	if(created == null){
+	  throw new TaskValidationException("Title cannot be empty");
+	}
+	return ResponseEntity.ok(TaskMapper.toResponse(created));
   }
+  
   @Operation(summary = "Update the existing task")
   @PutMapping("/{id}")
   public TaskResponseDTO updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDTO dto) {
 	Task updated = service.updateTask(id, TaskMapper.fromRequest(dto));
 	return TaskMapper.toResponse(updated);
   }
+  
   @Operation(summary = "Delete the existing task by Id")
   @DeleteMapping("/{id}")
-  public void deleteTask(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
 	service.deleteTask(id);
+	return ResponseEntity.noContent().build();
   }
 }
-//  @GetMapping("/filtered")
-//  public List<TaskResponseDTO> getFilteredTasks(@RequestParam(required = false) Status status,
-//		  @RequestParam(required = false) Priority priority,
-//		  @RequestParam(required = false, defaultValue = "id") String sortBy) {
-//	return service.getFilteredTasks(status, priority, sortBy)
-//				  .stream()
-//				  .map(TaskMapper::toResponse)
-//				  .collect(Collectors.toList());
-//  }

@@ -25,4 +25,9 @@ public class GlobalExceptionHandler {
 							.collect(Collectors.joining(", "));
 	return ResponseEntity.badRequest().body("Validation failed: " + errorMessage);
   }
+  
+  @ExceptionHandler(TaskValidationException.class)
+  public ResponseEntity<String> handleTaskValidationException(TaskValidationException ex) {
+	return ResponseEntity.badRequest().body(ex.getMessage());
+  }
 }

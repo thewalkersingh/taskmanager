@@ -1,4 +1,4 @@
-package com.thewa.taskmanager.repositroy;
+package com.thewa.taskmanager.repository;
 import com.thewa.taskmanager.model.Task;
 import org.springframework.stereotype.Repository;
 

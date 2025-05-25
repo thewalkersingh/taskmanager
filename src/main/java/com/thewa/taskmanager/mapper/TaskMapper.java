@@ -1,17 +1,20 @@
 package com.thewa.taskmanager.mapper;
 import com.thewa.taskmanager.dto.TaskRequestDTO;
 import com.thewa.taskmanager.dto.TaskResponseDTO;
+import com.thewa.taskmanager.model.Priority;
+import com.thewa.taskmanager.model.Status;
 import com.thewa.taskmanager.model.Task;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TaskMapper {
-  
   public static Task fromRequest(TaskRequestDTO dto) {
 	return Task.builder()
-			   .title(dto.getTitle())
-			   .description(dto.getDescription())
+			   .title(dto.getTitle() != null ? dto.getTitle() : "")
+			   .description(dto.getDescription() != null ? dto.getDescription() : "")
 			   .dueDate(dto.getDueDate())
-			   .priority(dto.getPriority())
-			   .status(dto.getStatus())
+			   .priority(dto.getPriority() != null ? dto.getPriority() : Priority.MEDIUM)
+			   .status(dto.getStatus() != null ? dto.getStatus() : Status.PENDING)
 			   .build();
   }
   

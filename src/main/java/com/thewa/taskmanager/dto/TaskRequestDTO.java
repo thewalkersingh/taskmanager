@@ -9,11 +9,12 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskRequestDTO {
-  @NotBlank(message = "Title is required")
+  @NotBlank(message = "Title cannot be empty")
   private String title;
   private String description;
   
