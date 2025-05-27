@@ -2,7 +2,6 @@ package com.thewa.taskmanager.service;
 import com.thewa.taskmanager.model.Priority;
 import com.thewa.taskmanager.model.Status;
 import com.thewa.taskmanager.model.Task;
-import jdk.jfr.Description;
 
 import java.time.LocalDate;
 import java.util.List;
