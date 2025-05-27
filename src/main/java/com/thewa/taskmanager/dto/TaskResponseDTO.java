@@ -10,10 +10,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskResponseDTO {
-  private Long id;
-  private String title;
-  private String description;
-  private LocalDate dueDate;
-  private Priority priority;
-  private Status status;
+   private Long id;
+   private String title;
+   private String description;
+   private LocalDate dueDate;
+   private Priority priority;
+   private Status status;
 }

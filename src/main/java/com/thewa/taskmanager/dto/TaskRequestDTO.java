@@ -14,14 +14,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskRequestDTO {
-  @NotBlank(message = "Title cannot be empty")
-  private String title;
-  private String description;
-  
-  @FutureOrPresent(message = "Due date cannot be in the past")
-  private LocalDate dueDate;
-  
-  @NotNull(message = "Priority is required")
-  private Priority priority;
-  private Status status;
+   @NotBlank(message = "Title cannot be empty")
+   private String title;
+   private String description;
+   
+   @FutureOrPresent(message = "Due date cannot be in the past")
+   private LocalDate dueDate;
+   
+   @NotNull(message = "Priority is required")
+   private Priority priority;
+   private Status status;
 }
